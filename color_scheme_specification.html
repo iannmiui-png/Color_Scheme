@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color_Scheme Language Specification</title>
+  <style>
+    :root {
+      --bg-color: #faf9f5;
+      --card-bg: #ffffff;
+      --border-color: #d2d1c8;
+      --border-subtle: #e2e1d9;
+      --text-main: #111111;
+      --text-muted: #555550;
+      --text-dim: #777770;
+      --accent-color: #d97706;
+      --code-bg: #f4f3ed;
+      --code-color: #059669;
+      --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 2.5rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #ffffff;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-color);
+      background: #fffbe0;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #fef3c7;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    main {
+      padding: 2rem 2.5rem;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+
+    strong {
+      color: var(--text-main);
+    }
+
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background-color: var(--code-bg);
+      color: var(--code-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: var(--code-bg);
+      color: var(--text-main);
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+      margin-bottom: 1.25rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .palette-item {
+      display: flex;
+      items-center;
+      gap: 8px;
+      padding: 8px;
+      background: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      background: #f8f7f2;
+      font-weight: 700;
+    }
+
+    tr:hover td {
+      background-color: #f8f7f2;
+    }
+
+    .cmd-code {
+      font-family: var(--font-mono);
+      color: var(--accent-color);
+      font-weight: 700;
+    }
+
+    .cmd-visual {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    .footer {
+      padding: 1.5rem 2.5rem;
+      background: #f8f7f2;
+      border-top: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="tag">Language Specification</span>
+      <h1>Color_Scheme</h1>
+      <p class="subtitle">A 2D Stack-Based Esoteric Programming Language created by <strong>ablit</strong></p>
+    </header>
+
+    <main>
+      <!-- Section 1: Introduction -->
+      <section>
+        <h2>1. Executive Summary</h2>
+        <p>
+          <strong>Color_Scheme</strong> is a two-dimensional, stack-oriented esoteric programming language where instructions are encoded as visually distinct colored cells arranged on a 2D grid.
+        </p>
+        <p>
+          Programs can be written in human-readable CSV source text using color abbreviations or directly synthesized into <strong>2D PNG pixel grid images</strong> where the program code is fully readable from the image's raw pixel data.
+        </p>
+      </section>
+
+      <!-- Section 2: Grid & Execution Model -->
+      <section>
+        <h2>2. Grid & Execution Model</h2>
+        <ul>
+          <li><strong>Grid Structure:</strong> Source text consists of cell instructions separated by commas (<code>,</code>). Rows are separated by pipes (<code>|</code>).</li>
+          <li><strong>Instruction Pointer (IP):</strong> Execution begins at Row 0, Column 0 moving horizontally to the right.</li>
+          <li><strong>Wrapping & Newline:</strong> When the IP reaches the end of a row or encounters the <code>W</code> instruction, it wraps to Column 0 of the next row.</li>
+          <li><strong>Stack Mechanics:</strong> Operates on a single LIFO stack storing signed integers. If an instruction requires values when the stack is empty, <code>0</code> is implicitly pushed.</li>
+          <li><strong>Halting:</strong> Execution terminates when the IP hits a <code>B</code> instruction, a halting branch instruction (e.g., <code>Y-B-BL</code> with zero top-item), or moves beyond the final row.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Color Palette Map -->
+      <section>
+        <h2>3. Color Palette Code Map</h2>
+        <p>Cells use 13 canonical palette colors specified by short codes:</p>
+        <div class="palette-grid">
+          <div class="palette-item"><div class="color-swatch" style="background:#FF8C00"></div><div><strong>O</strong> #FF8C00</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#70D6FF"></div><div><strong>LB</strong> #70D6FF</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#5FFF9F"></div><div><strong>L</strong> #5FFF9F</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FF5F5F"></div><div><strong>R</strong> #FF5F5F</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FFFF5F"></div><div><strong>Y</strong> #FFFF5F</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FF5FFF"></div><div><strong>P</strong> #FF5FFF</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FF69B4"></div><div><strong>RO</strong> #FF69B4</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#3A86FF"></div><div><strong>BL</strong> #3A86FF</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#00FFFF"></div><div><strong>A</strong> #00FFFF</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FFFFFF"></div><div><strong>W</strong> #FFFFFF</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#111111"></div><div><strong>B</strong> #111111</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#00E676"></div><div><strong>G</strong> #00E676</div></div>
+          <div class="palette-item"><div class="color-swatch" style="background:#FF4500"></div><div><strong>OR</strong> #FF4500</div></div>
+        </div>
+      </section>
+
+      <!-- Section 4: Instruction Catalog -->
+      <section>
+        <h2>4. Complete Instruction Command Reference</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Visual Pattern</th>
+              <th>Category</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cmd-code">O-LB</td>
+              <td><strong>Push 0</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FF8C00 50%, #70D6FF 50%);"></div></td>
+              <td>Stack</td>
+              <td>Push integer 0 onto the stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">L</td>
+              <td><strong>Increment / Push 1</strong></td>
+              <td><div class="cmd-visual" style="background: #5FFF9F;"></div></td>
+              <td>Stack</td>
+              <td>Increment top item on stack (or push 1 if stack is empty)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">O-L</td>
+              <td><strong>Increment / Push 1</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FF8C00 50%, #5FFF9F 50%);"></div></td>
+              <td>Stack</td>
+              <td>Increment top item on stack (or push 1 if empty)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">R / O-R</td>
+              <td><strong>Decrement</strong></td>
+              <td><div class="cmd-visual" style="background: #FF5F5F;"></div></td>
+              <td>Stack</td>
+              <td>Decrement top item on stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">O-Y</td>
+              <td><strong>Duplicate (DUP)</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FF8C00 50%, #FFFF5F 50%);"></div></td>
+              <td>Stack</td>
+              <td>Duplicate top item on stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">O-P</td>
+              <td><strong>Rotate (ROT)</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FF8C00 50%, #FF5FFF 50%);"></div></td>
+              <td>Stack</td>
+              <td>Move top item to bottom of stack (or swap top 2)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">O-B</td>
+              <td><strong>Clear Stack</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FF8C00 50%, #111111 50%);"></div></td>
+              <td>Stack</td>
+              <td>Clear all items from stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">BL-L</td>
+              <td><strong>Add (ADD)</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #3A86FF 50%, #5FFF9F 50%);"></div></td>
+              <td>Arithmetic</td>
+              <td>Pop b, add b to top item on stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">BL-LB</td>
+              <td><strong>Multiply (MUL)</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #3A86FF 50%, #70D6FF 50%);"></div></td>
+              <td>Arithmetic</td>
+              <td>Pop b, multiply top item by b</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">A-W</td>
+              <td><strong>Output Number</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00FFFF 50%, #FFFFFF 50%);"></div></td>
+              <td>I/O</td>
+              <td>Pop top item and output as integer string</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">A-B</td>
+              <td><strong>Output Custom Char</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00FFFF 50%, #111111 50%);"></div></td>
+              <td>I/O</td>
+              <td>Pop top item and output custom mapped character (see Sec. 5)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">A-G</td>
+              <td><strong>Output Raw ASCII</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00FFFF 50%, #00E676 50%);"></div></td>
+              <td>I/O</td>
+              <td>Pop top item and output String.fromCharCode(val)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">A-L</td>
+              <td><strong>Read Input</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00FFFF 50%, #5FFF9F 50%);"></div></td>
+              <td>I/O</td>
+              <td>Pop value from input queue and push onto stack</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">A-OR</td>
+              <td><strong>Clear Output</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00FFFF 50%, #FF4500 50%);"></div></td>
+              <td>I/O</td>
+              <td>Clear standard output text buffer</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">W</td>
+              <td><strong>Next Line</strong></td>
+              <td><div class="cmd-visual" style="background: #FFFFFF;"></div></td>
+              <td>Control</td>
+              <td>Jump IP to start of next row</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">B / B-B</td>
+              <td><strong>Halt / Padding</strong></td>
+              <td><div class="cmd-visual" style="background: #111111;"></div></td>
+              <td>Control</td>
+              <td>Halt execution or serve as blank grid padding</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">G</td>
+              <td><strong>Pass / No-Op</strong></td>
+              <td><div class="cmd-visual" style="background: #00E676;"></div></td>
+              <td>Control</td>
+              <td>Do nothing, advance IP to next cell</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">GR-O / Y-W-BL</td>
+              <td><strong>Jump Row 2 if Non-Zero</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #00E676 50%, #FF8C00 50%);"></div></td>
+              <td>Branching</td>
+              <td>If top item != 0, jump IP to row index 1 (2nd row)</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">Y-W-R</td>
+              <td><strong>Loop Row if Non-Zero</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(135deg, #FFFF5F 50%, #FF5F5F 50%);"></div></td>
+              <td>Branching</td>
+              <td>If top item != 0, jump IP to start of current row</td>
+            </tr>
+            <tr>
+              <td class="cmd-code">Y-B-BL / Y-B-R</td>
+              <td><strong>Halt if Zero</strong></td>
+              <td><div class="cmd-visual" style="background: linear-gradient(180deg, #FFFF5F 33%, #111111 33%, #111111 66%, #3A86FF 66%);"></div></td>
+              <td>Branching</td>
+              <td>If stack is empty or top item == 0, halt program</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section 5: Custom Character Output Mapping -->
+      <section>
+        <h2>5. Custom Character Mapping (A-B Encoding)</h2>
+        <p>The <code>A-B</code> character printer maps integer stack values to characters as follows:</p>
+        <table style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Integer Value</th>
+              <th>Mapped Character</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>Newline (<code>\n</code>)</td><td>Stack 0 &rarr; Newline</td></tr>
+            <tr><td><code>1</code></td><td>Space (<code>' '</code>)</td><td>Stack 1 &rarr; Space</td></tr>
+            <tr><td><code>2 &ndash; 27</code></td><td>Lowercase <code>a &ndash; z</code></td><td>Stack 2 &rarr; 'a', 3 &rarr; 'b', ..., 27 &rarr; 'z'</td></tr>
+            <tr><td><code>28 &ndash; 53</code></td><td>Uppercase <code>A &ndash; Z</code></td><td>Stack 28 &rarr; 'A', 29 &rarr; 'B', ..., 53 &rarr; 'Z'</td></tr>
+            <tr><td><code>54+</code></td><td>ASCII offset (<code>code - 22</code>)</td><td>Stack 55 &rarr; '!' (55 - 22 = 33 ASCII)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section 6: 2D Pixel Encoding Format -->
+      <section>
+        <h2>6. Pure 2D Pixel Encoding (PNG Format)</h2>
+        <p>
+          Color_Scheme images encode programs directly into the canvas pixels without relying on PNG metadata metadata chunks:
+        </p>
+        <ul>
+          <li><strong>Magic Marker Pixel (0, 0):</strong> Aqua <code>#00FFFF</code> (RGB: 0, 255, 255)</li>
+          <li><strong>Magic Marker Pixel (1, 0):</strong> Orange <code>#FF8C00</code> (RGB: 255, 140, 0)</li>
+          <li><strong>Geometry Pixel (2, 0):</strong> <code>RGB(numRows, maxCols, cellSize)</code></li>
+          <li><strong>Offset Pixel (3, 0):</strong> <code>RGB(startX, startY, 0)</code></li>
+          <li><strong>Grid Cell Sampling:</strong> Cells are sampled by calculating RGB distances against the 13 canonical palette colors across 1, 2, or 3 color segment regions per cell block.</li>
+        </ul>
+      </section>
+
+      <!-- Section 7: Sample Program -->
+      <section>
+        <h2>7. Example Program: Hello World!</h2>
+        <p>Source CSV String:</p>
+        <pre>O-LB,L,L,L,L,L,O-LB,L,L,BL-LB|O-Y,O-LB,L,L,L,BL-LB,L,L,L,L|L,A-B,O-Y,R,R,R,R,A-B,O-Y,L|L,L,O-Y,A-B,A-B,O-Y,L,L,L,L|L,L,A-B,O-LB,L,A-B,O-Y,O-LB,L,L|L,L,L,BL-LB,A-B,O-Y,L,L,L,L|L,L,A-B,O-Y,O-Y,BL-L,R,A-B,O-Y,L|L,L,A-B,O-LB,L,L,L,L,L,A-B|O-Y,L,O-LB,L,L,L,L,L,BL-LB,A-B</pre>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>Color_Scheme Language Specification &bull; Esolang Reference</div>
+      <div>ablit &bull; 2D Color Grid Esolang</div>
+    </footer>
+  </div>
+
+</body>
+</html>
